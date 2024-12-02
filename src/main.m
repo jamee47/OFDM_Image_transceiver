@@ -140,4 +140,8 @@ title('\bfTransmitted Image');
 %recovered image
 subplot(2,2,4);
 imshow(rec_im);
+<<<<<<< HEAD
 title(sprintf('\\bfReceived Image\n\\rmBER: %.2g', ber));
+=======
+title(sprintf('\\bfReceived Image\n\\rmBER: %.2g', ber));
+>>>>>>> 5758a8df132e5513d99fe31a0f4497763711c32b
