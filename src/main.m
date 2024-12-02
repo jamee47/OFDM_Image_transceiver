@@ -1,22 +1,19 @@
-clear all
-close all
-clc
+clc, clearvars, close all;
 
-%Simlation Parameters
-mod_method = '16QAM'; %modulation method
+%% Simlation Parameters
 n_fft = 64; %IFFT/FFT size
 n_cpe = 16; %cyclic prefix extension
-snr = 20;   %snr(dB) 
+snr = 30;   %snr(dB) 
 n_taps = 8; %number of channel taps
 ch_est_method = 'LS'; %channel estimation methd
 save_file = 0;
 
 %calculate modulation order from modulation method
-mod_methods = {'BPSK', 'QPSK', '8PSK', '16QAM', '32QAM', '64QAM'};
-mod_order = find (ismember (mod_methods, mod_method));
+mod_method = 'BPSK'; %modulation method
+mod_order = 1;
 
 %% input data do binary stream
-im = imread('../data/image.jpeg');
+im = imread('../data/bsmraau.jpg');
 im_bin = dec2bin(im(:))';
 im_bin = im_bin(:);
 
@@ -31,42 +28,14 @@ cons_sym_id = bin2dec(cons_data);
 
 %% symbol modulation
 %BPSK
-if mod_order == 1
- mod_ind = 2^(mod_order-1);
- n = 0:pi/mod_ind:2*pi-pi/mod_ind;
- in_phase = cos(n);
- quadrature = sin(n);
- symbol_book = (in_phase + quadrature*1i)';
-end
 
-%phase shift keying about unit circle
-if mod_order == 2 || mod_order == 3
- mod_ind = 2^(mod_order-1);
- n = 0: pi/mod_ind: 2*pi-pi/mod_ind;
- in_phase = cos(n+pi/4);
- quadrature = sin(n+pi/4);
- symbol_book = (in_phase + quadrature*1i)';
-end
+mod_ind = 2^(mod_order-1);
+n = 0:pi/mod_ind:2*pi-pi/mod_ind;
+in_phase = cos(n);
+quadrature = sin(n);
+symbol_book = (in_phase + quadrature*1i)';
 
-%16QAM, 64QAM modulation
-if mod_order == 4 || mod_order == 6
- mod_ind = sqrt(2^mod_order);
- in_phase = repmat(linspace(-1, 1, mod_ind), mod_ind, 1);
- quadrature = repmat(linspace(-1, 1, mod_ind)', 1, mod_ind);
- symbol_book = in_phase(:) + quadrature(:)*1i;
-end
 
-%32QAM modulation
-%generates 6x6 constellation and removes corners
-if mod_order == 5
- mod_ind = 6;
- in_phase = repmat(linspace(-1, 1, mod_ind), mod_ind, 1);
- quadrature = repmat(linspace(-1, 1, mod_ind)', 1, mod_ind);
- symbol_book = in_phase(:) + quadrature(:)*1i;
- symbol_book = symbol_book([2:5 7:30 32:35]);
-end
-
-%modulate data according to symbol_book
 X = symbol_book(cons_sym_id+1);
 
 %% use IFFT to move to time domain
@@ -80,7 +49,7 @@ x = ifft(X_blocks);
 x_cpe = [x(end-n_cpe+1:end,:);x];
 x_s = x_cpe(:);
 
-%add AWGN
+%% add AWGN
 %calculate data power
 data_pwr = mean(abs(x_s.^2));
 
@@ -139,8 +108,7 @@ rec_im = reshape(rec_im,size(im));
 figure;
 subplot(2,2,1);
 plot(X, 'x', 'linewidth', 2, 'markersize', 10);
-xlim([-2 2]);
-ylim([-2 2]);
+axis([-1.5 1.5 -2 2]);
 xlabel('In Phase');
 ylabel('Quadrature');
 if n_taps > 1
@@ -153,8 +121,7 @@ grid on;
 %recovered constellation
 subplot(2,2,2);
 plot(X_hat(1:500:end),'x','markersize',3);
-xlim([-2 2]);
-ylim([-2 2]);
+axis([-1.5 1.5 -2 2]);
 xlabel('In Phase');
 ylabel('Quadrature');
 if n_taps > 1
@@ -165,6 +132,7 @@ end
 grid on;
 
 %original image
+
 subplot(2,2,3);
 imshow(im);
 title('\bfTransmitted Image');
@@ -173,9 +141,3 @@ title('\bfTransmitted Image');
 subplot(2,2,4);
 imshow(rec_im);
 title(sprintf('\\bfReceived Image\n\\rmBER: %.2g', ber));
-
-
-%save figure
-if save_file
- print(sprintf('Plots/%s_%.0ffft_%.0fcpe_%0fdB_%.0ftaps_%s',mod_method, n_fft, n_cpe, snr, n_taps, ch_est_method), '-dmeta');
-end
