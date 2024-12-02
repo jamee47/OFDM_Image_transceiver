@@ -1,4 +1,4 @@
-# **OFDM-Based Image Transmission System**
+# **Design and Simulation of OFDM-Based Image Transceiver**
 
 This repository contains the source code and documentation for a MATLAB-based simulation of an Orthogonal Frequency Division Multiplexing (OFDM) system designed for image transmission. The project demonstrates the use of core concepts like FFT, IFFT, convolution, and BPSK modulation to reliably transmit and reconstruct an image under noise and multipath fading conditions.
 
