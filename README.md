@@ -67,9 +67,11 @@ The simulation evaluates system performance under varying SNR conditions. Key re
 
 ### **Example Outputs**
 - **Constellation Diagram:**  
-  *(Add your image here, e.g., ![Constellation Diagram](results/constellation_30db.jpg))*  
+  <img src="results/constellation_30db.jpg" alt="Constellation Diagram" width="400"/>  
+
 - **Transmitted and Received Image:**  
-  *(Add your image here, e.g., ![Image Recovery](results/trans_rec_image.jpg))*  
+  <img src="results/trans_rec_image.jpg" alt="Image Recovery" width="400"/>  
+
 
 ---
 
