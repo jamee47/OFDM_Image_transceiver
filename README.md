@@ -42,7 +42,7 @@ cd OFDM_Image_transceiver
 Place the input image in the `data` folder. Ensure the image file path is correctly referenced in the source code.
 
 ### **3. Run the Simulation**
-Open the `OFDM_Image_Transceiver.m` file in MATLAB and execute it. The script will:
+Open the `main.m` file in MATLAB and execute it. The script will:
 1. Preprocess the input image.
 2. Simulate the OFDM transmission system.
 3. Display performance metrics and visual results.
